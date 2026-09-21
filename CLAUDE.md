@@ -15,8 +15,13 @@ how **unstable** that measurement is. The deliverable is one public repo (the Gi
 `blobberus/Artificial-Confidence`; the artifact calls it `llm-calibration-study`) that ~15 research labs
 each have a reason to care about. The README is the real deliverable: people will spend ~90 seconds on it.
 
-- **Model:** Qwen3-8B (`Qwen/Qwen3-8B`) in 4-bit nf4, plus an **uncensored community fine-tune of the same
-  base** (id/path not yet specified — **ask the user for it before step c4**).
+- **Models (both 4-bit nf4, loaded from Hugging Face safetensors — never GGUF, never both in VRAM at once):**
+  - `stock`: `Qwen/Qwen3-8B` — https://huggingface.co/Qwen/Qwen3-8B
+  - `uncensored`: `huihui-ai/Huihui-Qwen3-8B-abliterated-v2` — https://huggingface.co/huihui-ai/Huihui-Qwen3-8B-abliterated-v2
+    (base `Qwen/Qwen3-8B`, same architecture/param count; **abliterated** = weights edited to remove refusal
+    behaviour, not trained — describe it accurately in the README rather than as a "fine-tune").
+  - Run one variant at a time (load → score → free GPU); the comparison is made afterwards from `scores.csv`.
+  - Tokenizers of the two repos were checked and are identical (same letter token ids and chat-template output).
 - **Hook:** GPT-4's technical report showed the pre-trained model was well calibrated and RLHF made it
   worse. Comparing stock instruct vs. uncensored fine-tune asks: *does removing alignment tuning move
   calibration back?* Nobody else will have this comparison.
@@ -260,7 +265,6 @@ dataset, filtering, readout, binning; short) → **Findings** (three bullets *wi
   "what I didn't do" instead. After 28 Sep, don't improve analysis.
 - **Don't commit or push** unless the user asks. Don't commit model weights or HF caches; `data/scores.csv` is
   intended to be committed.
-- **Things only the user can do:** supply the uncensored model id (c4), get the non-ML read (d4), and anything on
-  the outreach side.
-- **Known open items in the spec:** uncensored model id unspecified; "three comparisons" (scope) vs. four (protocol table);
+- **Things only the user can do:** get the non-ML read (d4), and anything on the outreach side.
+- **Known open items in the spec:** "three comparisons" (scope) vs. four (protocol table);
   spec dates (16–28 Sep 2026) may already be partly elapsed — ask what stage the user is actually at rather than assuming.
